@@ -1,21 +1,19 @@
 #!/usr/bin/env node
 import { promises as fs } from "fs"
+const { readdir}= fs
 import glob from "fast-glob"
-
 import isMain from "./is-main.js"
 
-const { readdir}= fs
-
 export const defaults= {
-	n: 3,
+	videos: 3,
 	glob: ["*mp4", "*avi", "*mkv"]
 }
 
-export async function pickVideos( opts){
+export async function pickVideo( opts){
 	opts= Object.assign({}, defaults, opts)
 	const candidates= await glob( opts.glob)
 
-	let n= opts.n
+	let n= opts.videos
 	const picks= []
 	while( n--> 0){
 		const pick= Math.floor(Math.random()* candidates.length)
@@ -24,10 +22,17 @@ export async function pickVideos( opts){
 	}
 	return picks
 }
+export default pickVideo
 
-isMain( import.meta.url).then( main=> {
-	if( !main){
+export async function main( opts){
+	const videos= await pickVideo( opts)
+	console.log( videos.join("\n"))
+	return videos
+}
+
+isMain( import.meta.url).then( isMain=> {
+	if( !isMain){
 		return
 	}
-	pickVideos().then(videos => console.log( videos.join("\n")))
+	main()
 })

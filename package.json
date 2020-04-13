@@ -4,7 +4,8 @@
 	"description": "pick exercise videos, pick random chapters",
 	"main": "exercise-picker.js",
 	"bin": {
-		"pick-video": "./pick-video.js"
+		"pick-video": "./pick-video.js",
+		"pick-chapter": "./pick-chapter.js"
 	},
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1"
@@ -20,6 +21,8 @@
 	"esm": true,
 	"type": "module",
 	"dependencies": {
-		"fast-glob": "^3.2.2"
+		"fast-glob": "^3.2.2",
+		"node-ffprobe": "^3.0.0",
+		"voodoo-opt": "^1.0.3"
 	}
 }
