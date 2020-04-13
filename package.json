@@ -1,0 +1,25 @@
+{
+	"name": "exercise-picker",
+	"version": "1.0.0",
+	"description": "pick exercise videos, pick random chapters",
+	"main": "exercise-picker.js",
+	"bin": {
+		"pick-video": "./pick-video.js"
+	},
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://archive.voodoowarez.com/exercise-picker"
+	},
+	"keywords": [],
+	"author": "jauntywunderkind",
+	"license": "MIT",
+	"module": "exercise-picker.js",
+	"esm": true,
+	"type": "module",
+	"dependencies": {
+		"fast-glob": "^3.2.2"
+	}
+}
