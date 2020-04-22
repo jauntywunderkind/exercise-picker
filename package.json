@@ -4,8 +4,9 @@
 	"description": "pick exercise videos, pick random chapters",
 	"main": "exercise-picker.js",
 	"bin": {
-		"pick-video": "./pick-video.js",
-		"pick-chapter": "./pick-chapter.js"
+		"pick-chapter": "./pick-chapter.js",
+		"pick-playlist": "./pick-playlist.js",
+		"pick-video": "./pick-video.js"
 	},
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1"

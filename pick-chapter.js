@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 import ffprobe from "node-ffprobe"
+import { basename} from "path"
 import { get} from "voodoo-opt/get.js"
+
 import isMain from "./is-main.js"
 
 export async function probe( opt){
@@ -39,23 +41,35 @@ export function pickChapter( probes, count){
 		count= probes.reduce(( acc, cur)=> acc+ cur.chapters.length, 0)
 	}
 
-	let chapter= Math.floor( Math.random()* count)
+	let number= Math.floor( Math.random()* count)
 	let filenum= 0
 	let video= probes[ filenum]
-	while( chapter>= video.chapters.length){
-		chapter-= video.chapters.length
+	while( number>= video.chapters.length){
+		number-= video.chapters.length
 		video= probes[ ++filenum]
 	}
+	const chapter= video.chapters[ number];
 	return {
-		filenum,
-		filename: video.format.filename,
-		chapter
+		file: {
+			number: filenum,
+			name: basename( video.format.filename),
+			title: video.format.tags.title,
+		},
+		chapter: {
+			number,
+			title: chapter.tags.title,
+			start: Number.parseFloat( chapter.start_time),
+			end: Number.parseFloat( chapter.end_time)
+		}
 	}
 }
 
 export async function main( opt){
 	const chapters= await pickChapters( opt)
-	console.log( JSON.stringify( chapters, null, "\t"))
+	// json output:
+	//console.log( JSON.stringify( chapters, null, "\t"))
+	// ndjson:
+	chapters.forEach( chapter=> console.log( JSON.stringify( chapter)))
 	return chapters
 }
 
