@@ -18,7 +18,6 @@ async function m3u( opt){
 		// vlc has an extension we can use, but i fear it is not well supported
 		console.log( `#EXTVLCOPT:start-time=${chapter.start - 3}`)
 		console.log( `#EXTVLCOPT:stop-time=${chapter.end}`)
-		console.error({duration: chapter.end-chapter.start})
 
 		// probably not useful per-Media-Segment like we are trying to do here?
 		//console.log( `#EXT-X-START:TIME-OFFSET=${chapter.start}`)

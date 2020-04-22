@@ -22,13 +22,26 @@ export async function pickChapters( opt){
 	opt= Object.assign({probe, pickChapter, chapters: 6}, opt)
 	const probes= await (opt.probes|| opt.probe())
 
-	// count how many chapters there are total
-	const count= probes.reduce(( acc, cur)=> acc+ cur.chapters.length, 0)
+	// ahead of time calculations
+	let totalChapters= 0
+	for( const probe of probes){
+		totalChapters+= probe.chapters.length
+
+		// create a new propert with chapter offset, which can be... negative?
+		//probe.chapter_offset= Number.POSITIVE_INFINITY
+		// uhh perhaps only detect negative offset
+		probe.chapter_offset= 0
+		for( const chapter of probe.chapters){
+			if( chapter.start_time< probe.chapter_offset){
+				probe.chapter_offset= chapter.start_time
+			}
+		}
+	}
 
 	// start making picks
 	const picks= new Array( opt.chapters)
 	for( let i= 0; i< picks.length; ++i){
-		picks[ i]= opt.pickChapter( probes, count)
+		picks[ i]= opt.pickChapter( probes, totalChapters)
 	}
 
 	return picks
@@ -48,7 +61,9 @@ export function pickChapter( probes, count){
 		number-= video.chapters.length
 		video= probes[ ++filenum]
 	}
-	const chapter= video.chapters[ number];
+	const
+		chapter= video.chapters[ number],
+		offset= video.chapter_offset|| 0
 	return {
 		file: {
 			number: filenum,
@@ -58,8 +73,8 @@ export function pickChapter( probes, count){
 		chapter: {
 			number,
 			title: chapter.tags.title,
-			start: Number.parseFloat( chapter.start_time),
-			end: Number.parseFloat( chapter.end_time)
+			start: Number.parseFloat( chapter.start_time- offset),
+			end: Number.parseFloat( chapter.end_time- offset)
 		}
 	}
 }
