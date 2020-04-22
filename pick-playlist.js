@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { get} from "voodoo-opt/get.js"
+import { gets} from "voodoo-opt/gets.js"
 
 import isMain from "./is-main.js"
 
@@ -7,16 +7,17 @@ import isMain from "./is-main.js"
 // see https://www.vlchelp.com/skipping-and-playing-audio-and-video-portions-in-vlc/
 
 async function m3u( opt){
-	const ndjson = get( "ndjson", opt)
+	const { ndjson, preroll }= await gets({ ndjson: undefined, preroll: 3}, opt)
+	
 	console.log( "#EXTM3U")
 	// unhappy for at least vlc:
 	//console.log( "#EXT-X-VERSION:6")
 	console.log( "#EXT-X-PLAYLIST-TYPE:VOD")
 	for await( const { file, chapter} of ndjson){
-		console.log( `#EXTINF:${chapter.end- chapter.start},${chapter.title||''}`)
+		console.log( `#EXTINF:${chapter.end- chapter.start+ preroll},${chapter.title||''}`)
 
 		// vlc has an extension we can use, but i fear it is not well supported
-		console.log( `#EXTVLCOPT:start-time=${chapter.start - 3}`)
+		console.log( `#EXTVLCOPT:start-time=${chapter.start- preroll}`)
 		console.log( `#EXTVLCOPT:stop-time=${chapter.end}`)
 
 		// probably not useful per-Media-Segment like we are trying to do here?
